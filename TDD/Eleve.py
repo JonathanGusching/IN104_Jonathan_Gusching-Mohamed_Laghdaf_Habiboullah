@@ -4,4 +4,5 @@ class Eleve(unittest.TestCase) :
         self.ID = ID
         self.name = name
         self.age = age
-    def 
+    def __str__(self) :
+        return f'L'Eleve s'appelle {self.name}, d'age {self.age} et son ID est {self.ID}' 
