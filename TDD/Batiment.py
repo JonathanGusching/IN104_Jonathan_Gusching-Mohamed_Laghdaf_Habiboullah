@@ -11,13 +11,13 @@ class Batiment :
         	return f'Le batiment est {self.name}, de type {self.role} qui vaut {self.price} situé {self.place}'
 	def getRole(self) :
 		return (self.role)
-	def setRole(self,new_role)
+	def setRole(self,new_role) :
 		self.role=new_role
 	def getPlace(self) :
 		return (self.place)
 	def setPlace(self, new_place)
 		self.place=new_place
-	def getName(self)
+	def getName(self) :
 		return self.name
-	def rename(self,new_name)
+	def rename(self,new_name) :
 		self.name=new_name
