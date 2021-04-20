@@ -21,3 +21,7 @@ class Batiment(unittest.TestCase) :
         return self.name
     def rename(self,new_name) :
         self.name=new_name
+    def testprice(self):
+        self.assertGreaterEqual(self.__price, 600)
+        self.assertLessEqual(self.__price, 0)
+    
