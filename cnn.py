@@ -19,8 +19,10 @@ import os
 import numpy as np
 
 
-labels = ['drawings', 'engraving']#,'iconography', 'painting', 'sculpture']
-img_size = 224
+labels = ['drawings', 'engraving','iconography', 'painting']# 'sculpture']
+#5 are too hard for the memory. Or it would require less pictures
+img_size = 164 #HELP SOS NEED MEMORY UBUNTU CRASHING :'(
+nb_labels=4
 
 #Function getting the images from different folders
 def get_data(data_dir):
@@ -41,30 +43,36 @@ if __name__ == '__main__':
 	train=get_data('train')
 	val=get_data('val')
 	filename='image_model.h5'
-	nb_it=20
+	nb_it=50
 	#loading the model
-	try:
-		model = keras.models.load_model(filename)
-	except:
-		print("File does not exist")
+	#try:
+	#	model = keras.models.load_model(filename)
+	#except:
+	#	print("File does not exist")
 	l=[]
 	for i in train:
 		if(i[1]==0):
 			l.append("drawings")
-		else:
+		elif(i[1]==1):
 			l.append("engraving")
+		elif(i[1]==2):
+			l.append("iconography")
+		elif(i[1]==3):
+			l.append("painting")
+		#elif(i[1]==4):
+		#	l.append("sculpture")
 	sns.set_style('darkgrid')
 	sns.countplot(x=l)
 
 	#Show a drawings image
-	plt.figure(figsize = (5,5))
-	plt.imshow(train[1][0])
-	plt.title(labels[train[0][1]])
+	#plt.figure(figsize = (5,5))
+	#plt.imshow(train[1][0])
+	#plt.title(labels[train[0][1]])
 
 	#Show an engraving one
-	plt.figure(figsize = (5,5))
-	plt.imshow(train[-1][0])
-	plt.title(labels[train[-1][1]])
+	#plt.figure(figsize = (5,5))
+	#plt.imshow(train[-1][0])
+	#plt.title(labels[train[-1][1]])
 
 	#plt.show()
 
@@ -106,11 +114,10 @@ if __name__ == '__main__':
         horizontal_flip = True,  # randomly flip images
         vertical_flip=False)  # randomly flip images
 
-
 	datagen.fit(x_train)
 
 	model = Sequential()
-	model.add(Conv2D(32,3,padding="same", activation="relu", input_shape=(224,224,3)))
+	model.add(Conv2D(32,3,padding="same", activation="relu", input_shape=(img_size,img_size,3)))
 	model.add(MaxPool2D())
 
 	model.add(Conv2D(32, 3, padding="same", activation="relu"))
@@ -122,7 +129,7 @@ if __name__ == '__main__':
 
 	model.add(Flatten())
 	model.add(Dense(128,activation="relu"))
-	model.add(Dense(2, activation="softmax"))
+	model.add(Dense(nb_labels, activation="softmax"))#Nb of labels
 
 	model.summary()
 
