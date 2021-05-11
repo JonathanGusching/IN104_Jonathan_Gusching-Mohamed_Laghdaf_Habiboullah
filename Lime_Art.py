@@ -13,7 +13,8 @@ import warnings
 
 #Importing our model
 warnings.filterwarnings('ignore') 
-inceptionV3_model = keras.applications.inception_v3.InceptionV3() #Load pretrained model
+model = keras.models.load_model('image_model.h5') #Loading our trained model
+#just in case it doesn't work, source : https://www.tensorflow.org/guide/keras/save_and_serialize
 
 
 #Read  and pre-processe the image
@@ -26,7 +27,7 @@ Xi = (Xi - 0.5)*2 #Inception pre-processing
 #Predict class of input image
 
 np.random.seed(222)
-preds = inceptionV3_model.predict(Xi[np.newaxis,:,:,:])
+preds = model.predict(Xi[np.newaxis,:,:,:])
 decode_predictions(preds)[0]
 top_pred_classes = preds[0].argsort()[-5:][::-1]
 #Step1 Create perturbations
@@ -57,7 +58,7 @@ def perturb_image(img,perturbation,segments):
 predictions = []
 for pert in perturbations:
   perturbed_img = perturb_image(Xi,pert,superpixels)
-  pred = inceptionV3_model.predict(perturbed_img[np.newaxis,:,:,:])
+  pred = model.predict(perturbed_img[np.newaxis,:,:,:])
   predictions.append(pred)
 
 predictions = np.array(predictions)
