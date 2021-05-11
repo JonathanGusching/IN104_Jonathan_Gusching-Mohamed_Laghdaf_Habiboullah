@@ -1,4 +1,5 @@
 #Imports
+import matplotlib.pyplot as plt
 import numpy as np
 import keras
 from keras.applications.imagenet_utils import decode_predictions
@@ -19,7 +20,7 @@ model = keras.models.load_model('image_model.h5') #Loading our trained model
 
 #Read  and pre-processe the image
 
-Xi = skimage.io.imread("https://arteagac.github.io/blog/lime_image/img/cat-and-dog.jpg")
+Xi = skimage.io.imread("mona_lisa.png")
 Xi = skimage.transform.resize(Xi, (164,164)) 
 Xi = (Xi - 0.5)*2 #Inception pre-processing
 
@@ -28,7 +29,8 @@ Xi = (Xi - 0.5)*2 #Inception pre-processing
 
 np.random.seed(222)
 preds = model.predict(Xi[np.newaxis,:,:,:])
-decode_predictions(preds)[0]
+print("Probabilities: (drawing,engraving, iconography, painting)",preds)
+#decode_predictions(preds)[0]
 top_pred_classes = preds[0].argsort()[-5:][::-1]
 #Step1 Create perturbations
 
@@ -36,7 +38,7 @@ superpixels = skimage.segmentation.quickshift(Xi, kernel_size=4,max_dist=200, ra
 num_superpixels = np.unique(superpixels).shape[0]
 
 
-num_perturb = 1500
+num_perturb = 150
 
 perturbations = np.random.binomial(1, 0.5, size=(num_perturb, num_superpixels))
 
@@ -96,4 +98,4 @@ top_features = np.argsort(coeff)[-num_top_features:]
 mask = np.zeros(num_superpixels) 
 mask[top_features]= True #Activate top superpixels
 skimage.io.imshow(perturb_image(Xi/2+0.5,mask,superpixels) )
-
+plt.show()

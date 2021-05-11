@@ -59,7 +59,7 @@ if __name__ == '__main__':
 			l.append("iconography")
 		elif(i[1]==3):
 			l.append("painting")
-		#elif(i[1]==4):
+		#elif(i[1]==4): NOT POSSIBLE, PROBLEM OF MEMORY
 		#	l.append("sculpture")
 	sns.set_style('darkgrid')
 	sns.countplot(x=l)
