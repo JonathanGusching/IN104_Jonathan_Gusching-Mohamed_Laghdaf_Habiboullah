@@ -20,7 +20,7 @@ model = keras.models.load_model('image_model.h5') #Loading our trained model
 #Read  and pre-processe the image
 
 Xi = skimage.io.imread("https://arteagac.github.io/blog/lime_image/img/cat-and-dog.jpg")
-Xi = skimage.transform.resize(Xi, (299,299)) 
+Xi = skimage.transform.resize(Xi, (164,164)) 
 Xi = (Xi - 0.5)*2 #Inception pre-processing
 
 
@@ -96,5 +96,4 @@ top_features = np.argsort(coeff)[-num_top_features:]
 mask = np.zeros(num_superpixels) 
 mask[top_features]= True #Activate top superpixels
 skimage.io.imshow(perturb_image(Xi/2+0.5,mask,superpixels) )
-
 
