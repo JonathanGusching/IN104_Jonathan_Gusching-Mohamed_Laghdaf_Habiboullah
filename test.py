@@ -20,7 +20,7 @@ with open(shap.datasets.cache(url)) as file:
 masker = shap.maskers.Image("inpaint_telea", X[0].shape)
 
 # By default the Partition explainer is used for all  partition explainer
-explainer = shap.Explainer(f, masker, output_names=class_names)
+explainer = shap.Explainer(model, masker, output_names=class_names)
 
 # here we use 500 evaluations of the underlying model to estimate the SHAP values
 shap_values = explainer(X[1:3], max_evals=500, batch_size=50, outputs=shap.Explanation.argsort.flip[:1])
