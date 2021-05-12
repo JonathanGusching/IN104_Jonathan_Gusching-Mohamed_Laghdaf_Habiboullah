@@ -27,8 +27,8 @@ print(X.shape)
 #    class_names = [v[1] for v in json.load(file).values()]
 
 #OUR CLASSES:
-class_names={0:'drawings',1:'engraving',2:'iconography',3:'paintings'}   
-
+#class_names={0:'drawings',1:'engraving',2:'iconography',3:'paintings'}   
+class_names=['drawings','engraving','iconography','painting']
 # define a masker that is used to mask out partitions of the input image, this one uses a blurred background
 masker = shap.maskers.Image("inpaint_telea", X.shape)
 print(X.shape)
@@ -36,8 +36,11 @@ print(X.shape)
 explainer = shap.Explainer(model, masker, output_names=class_names)
 print(X.shape)
 print(explainer)
-Y=np.array([X])
+Y=np.array([X,X,X,X])
 print(Y.shape)
 # here we use 500 evaluations of the underlying model to estimate the SHAP values
-shap_values = explainer([X], max_evals=500, batch_size=50, outputs=shap.Explanation.argsort.flip[:1])
-shap.image_plot(shap_values)
+shap_values = explainer(Y, max_evals=500, batch_size=50, outputs=shap.Explanation.argsort.flip[:1])
+#print(class_names.shape)
+print(len(class_names))
+print(len(shap_values))
+shap.image_plot(shap_values)#, pixel_values=np.array([4,164,164,3]),labels=class_names)

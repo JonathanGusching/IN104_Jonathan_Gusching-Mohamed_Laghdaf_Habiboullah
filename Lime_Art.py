@@ -20,13 +20,13 @@ model = keras.models.load_model('image_model.h5') #Loading our trained model
 
 #Read  and pre-processe the image
 
-Xi = skimage.io.imread("mona_lisa.png")
+Xi = skimage.io.imread("peinture2.jpg")
 Xi = skimage.transform.resize(Xi, (164,164)) 
 Xi = (Xi - 0.5)*2 #Inception pre-processing
 
 
 #Predict class of input image
-
+labels={0:'drawings',1:'engraving',2:'iconography',3:'painting'}
 np.random.seed(222)
 preds = model.predict(Xi[np.newaxis,:,:,:])
 print("Probabilities: (drawing,engraving, iconography, painting)",preds)
@@ -98,4 +98,5 @@ top_features = np.argsort(coeff)[-num_top_features:]
 mask = np.zeros(num_superpixels) 
 mask[top_features]= True #Activate top superpixels
 skimage.io.imshow(perturb_image(Xi/2+0.5,mask,superpixels) )
+plt.title(labels[np.argmax(preds)])
 plt.show()
