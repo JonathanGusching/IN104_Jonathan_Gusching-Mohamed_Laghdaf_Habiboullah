@@ -11,12 +11,19 @@ y = df.iloc[0:10000, 1].values
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 length=X.shape[1]
+L=[]
 for i in range(length):
-    if type(X[:,i][0])==str or type(X[:,i][0])==bool:
+    if type(X[:,i][0])!=float and type(X[:,i][0])!=int:
         labelencoder_X_ = LabelEncoder()
         X[:, i] = labelencoder_X_.fit_transform(X[:, i])
-#ct = ColumnTransformer([("Country", OneHotEncoder(), [1])], remainder = 'passthrough')
-#X = ct.fit_transform(X)
+        L.append(i)
+
+for i in range(len(L)):
+    if type(X)!=numpy.ndarray:
+        X=X.toarray()
+    ct = ColumnTransformer([("feature "+str(L[i]), OneHotEncoder(), [L[i]])], remainder = 'passthrough')
+    X = ct.fit_transform(X)
+
 #removing the dummy variable
 
 
