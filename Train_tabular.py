@@ -1,8 +1,7 @@
 #STEP1: Process the data and split into a training and test set
 import pandas as pd
 import numpy as np
-# import pickle
-import joblib
+
 # Importing the dataset
 df = pd.read_csv('US_Accidents_Dec20_Updated.csv')
 df=df.iloc[:100000]
@@ -66,5 +65,5 @@ model.compile(optimizer='adam',loss=tf.keras.losses.BinaryCrossentropy(from_logi
 model.fit(train_ds,validation_data=val_ds,epochs=100)
 
 # save the model to disk
-filename = 'finalized_model.sav'
-joblib.dump(model,filename)
+# save the model to disk
+model.save('table.h5')
