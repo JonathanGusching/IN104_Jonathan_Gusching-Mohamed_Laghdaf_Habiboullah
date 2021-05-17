@@ -47,7 +47,7 @@ for header in ['Humidity','Temperature', 'Wind_Chill','Pressure','Wind_Speed','S
 
 feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
 
-batch_size = 32
+batch_size = 64
 train_ds = df_to_dataset(train, batch_size=batch_size)
 val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
 test_ds = df_to_dataset(test, shuffle=False, batch_size=batch_size)
