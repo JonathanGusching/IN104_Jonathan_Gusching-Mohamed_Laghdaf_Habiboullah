@@ -11,5 +11,5 @@ from transformers_interpret import SequenceClassificationExplainer
 cls_explainer = SequenceClassificationExplainer(
     model,
     tokenizer)
-word_attributions = cls_explainer("Bitch")
+word_attributions = cls_explainer("Hello I am a test. I love you")
 cls_explainer.visualize("distilbert_viz.html")
