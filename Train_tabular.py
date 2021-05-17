@@ -1,86 +1,70 @@
 #STEP1: Process the data and split into a training and test set
 import pandas as pd
-
+import numpy as np
+# import pickle
+import joblib
 # Importing the dataset
 df = pd.read_csv('US_Accidents_Dec20_Updated.csv')
-del df['Astronomical_Twilight;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;']
-X = df.iloc[0:10000,2:].values
-y = df.iloc[0:10000, 1].values
-
-# Encoding categorical data
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-from sklearn.compose import ColumnTransformer
-length=X.shape[1]
-L=[]
-for i in range(length):
-    if type(X[:,i][0])!=float and type(X[:,i][0])!=int:
-        labelencoder_X_ = LabelEncoder()
-        X[:, i] = labelencoder_X_.fit_transform(X[:, i])
-        L.append(i)
-
-for i in range(len(L)):
-    if type(X)!=numpy.ndarray:
-        X=X.toarray()
-    ct = ColumnTransformer([("feature "+str(L[i]), OneHotEncoder(), [L[i]])], remainder = 'passthrough')
-    X = ct.fit_transform(X)
-
-#removing the dummy variable
+df=df.iloc[:100000]
 
 
-# Splitting the dataset into the Training set and Test set
+df.rename(columns={ 'Temperature(F)': 'Temperature', 'Wind_Chill(F)':'Wind_Chill', 'Distance(mi)':'Distance','Humidity(%)':'Humidity','Pressure(in)':'Pressure','Wind_Speed(mph)':'Wind_Speed', 'Visibility(mi)':'Visibility'},inplace=True)
+import tensorflow as tf
+
+from tensorflow import feature_column
+from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+df = df.replace(to_replace='None', value=np.nan).dropna()
+df['target']=np.where(df['Sunrise_Sunset']=='Day', 0, 1)
+dataframe=df[['Temperature','Wind_Chill','Humidity','Pressure','Severity','target','Wind_Speed','Visibility']]
 
-# Feature Scaling
-from sklearn.preprocessing import StandardScaler
-sc = StandardScaler(with_mean=False)
-X_train = sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
+train, test = train_test_split(dataframe, test_size=0.2)
+train, val = train_test_split(train, test_size=0.2)
 
-
-
-
-#Step 2: Build the Artificial Neural Network Structure
-
-# Importing the Keras libraries and packages
-#import keras
-from keras.models import Sequential #used to initialize the NN
-from keras.layers import Dense  #used to build the hidden Layers
-from keras.layers import Dropout
-
-# Initialising the ANN
-classifier = Sequential()
-
-# Adding the input layer and the first hidden layer with dropout
-classifier.add(Dense(units = 512, kernel_initializer = 'uniform', activation = 'relu', input_dim =X_train.shape[1] ))
-classifier.add(Dropout(rate=0.1))
-
-# Adding the second hidden layer
-classifier.add(Dense(units = 256, kernel_initializer = 'uniform', activation = 'relu'))
-classifier.add(Dropout(rate=0.1))
-
-# Adding the second hidden layer
-#classifier.add(Dense(units = 256, kernel_initializer = 'uniform', activation = 'relu'))
-#classifier.add(Dropout(rate=0.1))
-
-# Adding the output layer
-classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
-
-# Compiling the ANN
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+def df_to_dataset(dataframe, shuffle=True, batch_size=32):
+  dataframe = dataframe.copy()
+  labels = dataframe.pop('target')
+  ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
+  if shuffle:
+    ds = ds.shuffle(buffer_size=len(dataframe))
+  ds = ds.batch(batch_size)
+  return ds
 
 
-#Step 3: Train the Artificial Neural Network
+feature_columns = []
 
-# Fitting the ANN to the Training set
-classifier.fit(X_train, y_train, batch_size = 64, epochs = 100)
+# numeric cols
+for header in ['Humidity','Temperature', 'Wind_Chill','Pressure','Wind_Speed','Severity','Visibility']:
+  feature_columns.append(feature_column.numeric_column(header))
 
-#Step 4: Use the model to predict!
 
-# Predicting the Test set results
-y_pred = classifier.predict(X_test)
-y_pred = (y_pred > 0.5)
+# indicator_column_names = ['Weather_Condition']
+# for col_name in indicator_column_names:
+#   categorical_column = feature_column.categorical_column_with_vocabulary_list(
+#       col_name, dataframe[col_name].unique())
+#   indicator_column = feature_column.indicator_column(categorical_column)
+#   feature_columns.append(indicator_column)
 
-# Making the Confusion Matrix
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y_test, y_pred)
+
+feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
+
+batch_size = 32
+train_ds = df_to_dataset(train, batch_size=batch_size)
+val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
+test_ds = df_to_dataset(test, shuffle=False, batch_size=batch_size)
+
+model = tf.keras.Sequential([
+  feature_layer,
+  layers.Dense(128, activation='relu'),
+  layers.Dense(128, activation='relu'),
+  layers.Dropout(.1),
+  layers.Dense(1)
+])
+
+model.compile(optimizer='adam',loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),metrics=['accuracy'])
+
+model.fit(train_ds,validation_data=val_ds,epochs=100)
+
+# save the model to disk
+filename = 'finalized_model.sav'
+joblib.dump(model,filename)
