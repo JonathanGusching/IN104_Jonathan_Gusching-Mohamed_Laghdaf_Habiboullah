@@ -10,12 +10,11 @@ device="cpu"
 torch.device(device)
 
 #We can't use our initial dataset (1GB), too heavy, so instead... :
-file_name="Reviews.csv"
+file_name="clothes.csv"
 
 
 ds = pd.read_csv(file_name)
-ds=ds[1:100]
-example=ds.iloc[56,9] #Getting the right column, i.e. the one with the review
+example=ds.iloc[15,4] #Getting the right column, i.e. the one with the review
 
 #Importing the model
 model_name = "ProsusAI/finbert"
@@ -36,8 +35,7 @@ cls_explainer = SequenceClassificationExplainer(
 word_attributions = cls_explainer(example)
 cls_explainer.visualize("visualize.html")
 
-#Explaining using LIME:
-
+#FIRST ATTEMPT: Explaining using LIME:
 #from lime.lime_text import LimeTextExplainer
 #def predictor(texts):
 #	outputs = model(**tokenizer(texts, return_tensors="pt", padding=True).to(device))
@@ -47,7 +45,14 @@ cls_explainer.visualize("visualize.html")
 #class_names=['positive','negative','neutral']
 #explainer = LimeTextExplainer(class_names=class_names)
 
-#exp=explainer.explain_instance(example,predictor,num_features=20, num_samples=2000)
+#exp=explainer.explain_instance(example,predictor)#,num_features=20, num_samples=2000)
 ## LIME END
 
 #https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/sentiment_analysis/Positive%20vs.%20Negative%20Sentiment%20Classification.html
+
+#import eli5
+#from eli5.lime import TextExplainer
+
+#te = TextExplainer(model,random_state=42)
+#te.fit(example, model.eval())
+#te.show_prediction(target=example)#target_names=twenty_train.target_names)

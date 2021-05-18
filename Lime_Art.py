@@ -20,7 +20,7 @@ model = keras.models.load_model('image_model.h5') #Loading our trained model
 
 #Read  and pre-processe the image
 
-Xi = skimage.io.imread("saint-michel.jpg")
+Xi = skimage.io.imread("dessin2.jpg")
 Xi = skimage.transform.resize(Xi, (164,164)) 
 Xi = (Xi - 0.5)*2 #Inception pre-processing
 

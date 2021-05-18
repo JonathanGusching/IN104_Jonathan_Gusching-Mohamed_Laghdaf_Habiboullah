@@ -99,7 +99,7 @@ class GradCAM:
 
 
 model=keras.models.load_model("image_model.h5")
-image = cv2.imread('peinture.jpg')
+image = cv2.imread('dessin2.jpg')
 image = cv2.resize(image, (164, 164))
 image = image.astype('float32') / 255
 image = np.expand_dims(image, axis=0)
