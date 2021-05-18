@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 #uses PyTorch
 
-device="cuda"
+device="cpu"
 torch.device(device)
 
 #We can't use our initial dataset (1GB), too heavy, so instead... :
@@ -23,7 +23,7 @@ model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
 model=model.to(device)
 
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name) #Note to myself: Tokenization= getting the words in the text, individually, and ignoring white spaces
 
 # With both the model and tokenizer initialized we are now able to get explanations on an example text.
 
@@ -37,13 +37,16 @@ word_attributions = cls_explainer(example)
 cls_explainer.visualize("visualize.html")
 
 #Explaining using LIME:
-from lime.lime_text import LimeTextExplainer
-def predictor(texts):
-	outputs = model(**tokenizer(texts, return_tensors="pt", padding=True).to(device))
-	probas = F.softmax(outputs.logits).detach().numpy()
-	return probas
 
-class_names=['positive','negative','neutral']
-explainer = LimeTextExplainer(class_names=class_names)
+#from lime.lime_text import LimeTextExplainer
+#def predictor(texts):
+#	outputs = model(**tokenizer(texts, return_tensors="pt", padding=True).to(device))
+#	probas = F.softmax(outputs.logits).detach().numpy() #memory problem here
+#	return probas
 
-exp=explainer.explain_instance(example,predictor,num_features=20, num_samples=2000)
+#class_names=['positive','negative','neutral']
+#explainer = LimeTextExplainer(class_names=class_names)
+
+#exp=explainer.explain_instance(example,predictor,num_features=20, num_samples=2000)
+## LIME END
+

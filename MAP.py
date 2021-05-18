@@ -99,7 +99,7 @@ class GradCAM:
 
 
 model=keras.models.load_model("image_model.h5")
-image = cv2.imread('saint-michel.jpg')
+image = cv2.imread('peinture.jpg')
 image = cv2.resize(image, (164, 164))
 image = image.astype('float32') / 255
 image = np.expand_dims(image, axis=0)
@@ -111,8 +111,8 @@ for idx in range(len(model.layers)):
   print(model.get_layer(index = idx).name)
 
 # picking the layer 
-#icam = GradCAM(model, i, 'dropout')
-icam = GradCAM(model, i, 'conv2d_2') 
+icam = GradCAM(model, i, 'dropout')
+#icam = GradCAM(model, i, 'conv2d_2') 
 heatmap = icam.compute_heatmap(image)
 heatmap = cv2.resize(heatmap, (164, 164))
 
