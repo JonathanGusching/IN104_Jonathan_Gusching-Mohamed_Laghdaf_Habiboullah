@@ -50,3 +50,4 @@ cls_explainer.visualize("visualize.html")
 #exp=explainer.explain_instance(example,predictor,num_features=20, num_samples=2000)
 ## LIME END
 
+#https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/sentiment_analysis/Positive%20vs.%20Negative%20Sentiment%20Classification.html
