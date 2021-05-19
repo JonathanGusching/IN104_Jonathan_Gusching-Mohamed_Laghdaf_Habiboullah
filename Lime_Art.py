@@ -27,7 +27,7 @@ Xi = (Xi - 0.5)*2 #Inception pre-processing
 
 #Predict class of input image
 labels={0:'drawings',1:'engraving',2:'iconography',3:'painting'}
-np.random.seed(222)
+np.random.seed()
 preds = model.predict(Xi[np.newaxis,:,:,:])
 print("Probabilities: (drawing,engraving, iconography, painting)",preds)
 #decode_predictions(preds)[0]
@@ -37,8 +37,7 @@ top_pred_classes = preds[0].argsort()[-5:][::-1]
 superpixels = skimage.segmentation.quickshift(Xi, kernel_size=4,max_dist=200, ratio=0.2)
 num_superpixels = np.unique(superpixels).shape[0]
 
-
-num_perturb = 150
+num_perturb = 250
 
 perturbations = np.random.binomial(1, 0.5, size=(num_perturb, num_superpixels))
 
@@ -66,19 +65,12 @@ for pert in perturbations:
 predictions = np.array(predictions)
 
 
-
-
-
-
-
-
 #Step 3: Compute distances between the original image and each of the perturbed images and compute weights (importance) of each perturbed image
 
 original_image = np.ones(num_superpixels)[np.newaxis,:] #Perturbation with all superpixels enabled 
 distances = sklearn.metrics.pairwise_distances(perturbations,original_image, metric='cosine').ravel()
 kernel_width = 0.25
 weights = np.sqrt(np.exp(-(distances**2)/kernel_width**2)) #Kernel function
-
 
 
 #Step 4: Use perturbations, predictions and weights to fit an explainable (linear) model

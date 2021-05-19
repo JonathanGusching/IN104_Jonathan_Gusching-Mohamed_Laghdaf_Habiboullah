@@ -1,7 +1,6 @@
-#################################################
-#				CODE INSPIRED BY				#
+#########################################################
+#				CODE GREATLY INSPIRED BY				#
 #https://www.analyticsvidhya.com/blog/2020/10/create-image-classification-model-python-keras/
-#TODO: MAKE THE SAVING SYSTEM WORK BETTER!
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -44,11 +43,6 @@ if __name__ == '__main__':
 	val=get_data('val')
 	filename='image_model.h5'
 	nb_it=50
-	#loading the model
-	#try:
-	#	model = keras.models.load_model(filename)
-	#except:
-	#	print("File does not exist")
 	l=[]
 	for i in train:
 		if(i[1]==0):
@@ -64,17 +58,6 @@ if __name__ == '__main__':
 	sns.set_style('darkgrid')
 	sns.countplot(x=l)
 
-	#Show a drawings image
-	#plt.figure(figsize = (5,5))
-	#plt.imshow(train[1][0])
-	#plt.title(labels[train[0][1]])
-
-	#Show an engraving one
-	#plt.figure(figsize = (5,5))
-	#plt.imshow(train[-1][0])
-	#plt.title(labels[train[-1][1]])
-
-	#plt.show()
 
 	#DATA PREPROCESSING
 

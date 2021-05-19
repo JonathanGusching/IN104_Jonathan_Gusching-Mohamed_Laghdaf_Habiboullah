@@ -1,5 +1,3 @@
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
-import json
 import keras
 import shap
 import tensorflow as tf
@@ -7,9 +5,11 @@ import numpy as np
 import skimage.io 
 import skimage.segmentation
 
-# load pre-trained model and choose two images to explain
-#model = ResNet50(weights='imagenet')
-#OUR MODEL:
+#First version of SHAP, THE RESULTS AREN'T EXTREMELY SATISFYING.
+#FOR A BETTER VERSION SEE SHAP_Art_Deep.py
+
+
+#Loading our model
 model = keras.models.load_model("image_model.h5")
 
 X = skimage.io.imread("dessin2.jpg")
@@ -18,33 +18,15 @@ X=skimage.transform.resize(X, (164,164))
 Z = skimage.io.imread("saint-michel.jpg")
 Z=skimage.transform.resize(Z, (164,164))
 
-print(X.shape) 
-#def f(X):
-#    tmp = X.copy()
-#    preprocess_input(tmp)
-#    return model(tmp)
-#X, y = shap.datasets.imagenet50()
 
-#load the ImageNet class names as a vectorized mapping function from ids to names
-#url = "https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json"
-#with open(shap.datasets.cache(url)) as file:
-#    class_names = [v[1] for v in json.load(file).values()]
-
-#OUR CLASSES:
-#class_names={0:'drawings',1:'engraving',2:'iconography',3:'paintings'}   
 class_names=np.array(["drawings","engraving","iconography","painting"])
 # define a masker that is used to mask out partitions of the input image, this one uses a blurred background
 masker = shap.maskers.Image("inpaint_telea", X.shape)
-print(X.shape)
+
 # By default the Partition explainer is used for all  partition explainer
 explainer = shap.Explainer(model, masker)#, output_names=class_names)
-print(X.shape)
-print(explainer)
 Y=np.array([X,Z])
-print(Y.shape)
 # here we use 500 evaluations of the underlying model to estimate the SHAP values
 shap_values = explainer(Y, max_evals=500, batch_size=50, outputs=shap.Explanation.argsort.flip[:1])
 #print(class_names.shape)
-print(len(class_names))
-print(len(shap_values))
 shap.image_plot(shap_values)#,labels=class_names)

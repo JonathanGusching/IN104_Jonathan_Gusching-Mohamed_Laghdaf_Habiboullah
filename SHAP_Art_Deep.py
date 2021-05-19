@@ -1,52 +1,55 @@
-from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
-import json
 import keras
 import shap
 import tensorflow as tf
 import numpy as np
+import cv2
 import skimage.io 
 import skimage.segmentation
 
-import cv2
-import os
-img_size=164
-#Function getting the images from different folders
-def get_images(data_dir):
-	data = []
-	path = data_dir 
-	for img in os.listdir(data_dir):
-		try:
-			img_arr = skimage.io.imread(os.path.join(path, img))
-			resized_arr=skimage.transform.resize(img_arr, (164,164))
-			data.append([resized_arr])
-		except Exception as e:
-			print(e)
-	return data
-	#return np.array(data)
+#Based on the Github documentation https://github.com/slundberg/shap
+#To use it, you need a few jpg images (We used, as commended by the documentation, 100 images) in the folder PATH
+#PATH OF THE IMAGES USED BY DEEP EXPLAINER
+PATH="expl/*.jpg"
 
+#TWO TEST IMAGES
+img1="dessin2.jpg"
+img2="saint-michel.jpg"
+
+
+#default size used by our model
+img_size=164
+
+#The labels in the order they appear in the plot
 labels = ['drawings', 'engraving','iconography', 'painting']
-#pictures=get_data('train')
-# load pre-trained model and choose two images to explain
-#model = ResNet50(weights='imagenet')
-#OUR MODEL:
+
+
+#Loading our model:
 model = keras.models.load_model("image_model.h5")
 
-X = skimage.io.imread("dessin2.jpg")
-X=skimage.transform.resize(X, (164,164))
+#test pictures
+X = skimage.io.imread(img1)
+Z = skimage.io.imread(img2)
 
-Z = skimage.io.imread("saint-michel.jpg")
-Z=skimage.transform.resize(Z, (164,164))
+#For the model
+X=skimage.transform.resize(X, (img_size,img_size))
+Z=skimage.transform.resize(Z, (img_size,img_size))
 
 x_test=np.array([X,Z])
 # select a set of background examples to take an expectation over
-background = get_images('expl')#[np.random.choice(x_train.shape[0], 100, replace=False)]
-for img in background:
-	print(img.shape, "pouet pouet")
-# explain predictions of the model on four images
+
+import glob
+background = []
+for img in glob.glob(PATH):
+    n= cv2.imread(img)
+    n = cv2.resize(n, (img_size, img_size))
+    background.append(n)
+background=np.array(background)
+
+# explain predictions of the model on our images
 e = shap.DeepExplainer(model, background)
-# ...or pass tensors directly
-# e = shap.DeepExplainer((model.layers[0].input, model.layers[-1].output), background)
-shap_values = e.shap_values(x_test)
+
+shap_values = e.shap_values(x_test,check_additivity=False)
+
 
 # plot the feature attributions
-shap.image_plot(shap_values, -x_test)
+shap.image_plot(shap_values, x_test)
