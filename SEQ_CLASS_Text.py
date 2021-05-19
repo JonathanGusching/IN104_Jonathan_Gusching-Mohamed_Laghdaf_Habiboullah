@@ -1,13 +1,6 @@
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from lime import lime_text
-import torch
-import torch.nn.functional as F
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import transformers
-#uses PyTorch
-
 
 #We can't use our initial dataset (3GB), too heavy, so instead... :
 file_name="clothes.csv"
