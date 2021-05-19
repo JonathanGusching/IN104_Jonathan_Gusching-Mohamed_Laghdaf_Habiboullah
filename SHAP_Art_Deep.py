@@ -12,7 +12,7 @@ import skimage.segmentation
 PATH="expl/*.jpg"
 
 #TWO TEST IMAGES
-img1="dessin2.jpg"
+img1="mona_lisa.png"
 img2="saint-michel.jpg"
 
 

@@ -4,6 +4,8 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+
+#https://glassboxmedicine.com/2020/05/29/grad-cam-visual-explanations-from-deep-networks/
 class GradCAM:
     def __init__(self, model, classIdx, layerName=None):
         # store the model, the class index used to measure the class
@@ -83,7 +85,7 @@ class GradCAM:
         return heatmap
 
     def overlay_heatmap(self, heatmap, image, alpha=0.5,
-                        colormap=cv2.COLORMAP_VIRIDIS):
+                        colormap=cv2.COLORMAP_TURBO):
         # apply the supplied color map to the heatmap and then
         # overlay the heatmap on the input image
         heatmap = cv2.applyColorMap(heatmap, colormap)
@@ -91,7 +93,7 @@ class GradCAM:
         img_get=image[0]
         print(img_get.shape)
 
-        heatmap = heatmap.astype('float32') / 255
+        heatmap = heatmap.astype('float64') / 255
         output = cv2.addWeighted(img_get, alpha, heatmap, 1.0 - alpha, 0.0)
         # return a 2-tuple of the color mapped heatmap and the output,
         # overlaid image
@@ -99,9 +101,9 @@ class GradCAM:
 
 
 model=keras.models.load_model("image_model.h5")
-image = cv2.imread('dessin2.jpg')
+image = cv2.imread('mona_lisa.png')
 image = cv2.resize(image, (164, 164))
-image = image.astype('float32') / 255
+image = image.astype('float64') / 255
 image = np.expand_dims(image, axis=0)
 
 preds = model.predict(image) 
@@ -111,7 +113,7 @@ for idx in range(len(model.layers)):
   print(model.get_layer(index = idx).name)
 
 # picking the layer 
-icam = GradCAM(model, i, 'dropout')
+icam = GradCAM(model, i, 'conv2d')
 #icam = GradCAM(model, i, 'conv2d_2') 
 heatmap = icam.compute_heatmap(image)
 heatmap = cv2.resize(heatmap, (164, 164))

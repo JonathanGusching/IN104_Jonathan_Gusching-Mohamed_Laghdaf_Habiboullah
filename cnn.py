@@ -100,6 +100,8 @@ if __name__ == '__main__':
 	datagen.fit(x_train)
 
 	model = Sequential()
+	#A Sequential model is appropriate for a plain stack of layers where each layer has exactly one input tensor and one output tensor.
+	
 	model.add(Conv2D(32,3,padding="same", activation="relu", input_shape=(img_size,img_size,3)))
 	model.add(MaxPool2D())
 
