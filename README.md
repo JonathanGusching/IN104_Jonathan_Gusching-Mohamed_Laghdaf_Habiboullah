@@ -20,8 +20,8 @@ The methods used for XAI are:
 2. Tabular Dataset :
 	- XGB
 	- SHAP
-	- LIME
 	- ALE (all of them are in the file Explainable_Tabular.py)
+	- LIME (LIME_Tabul.py)
 3. Text Dataset :
 	- Sequence Classification Explainer (provided by the transformers library; the file is SEQ_CLASS_Text.py)
 	- SHAP (SHAP_Text.py)
