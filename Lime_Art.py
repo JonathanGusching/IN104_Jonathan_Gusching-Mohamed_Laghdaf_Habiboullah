@@ -20,7 +20,7 @@ model = keras.models.load_model('image_model.h5') #Loading our trained model
 
 #Read  and pre-processe the image
 
-Xi = skimage.io.imread("dessin2.jpg")
+Xi = skimage.io.imread("mona_lisa.png")
 Xi = skimage.transform.resize(Xi, (164,164)) 
 Xi = (Xi - 0.5)*2 #Inception pre-processing
 
@@ -37,7 +37,7 @@ top_pred_classes = preds[0].argsort()[-5:][::-1]
 superpixels = skimage.segmentation.quickshift(Xi, kernel_size=4,max_dist=200, ratio=0.2)
 num_superpixels = np.unique(superpixels).shape[0]
 
-num_perturb = 250
+num_perturb = 200
 
 perturbations = np.random.binomial(1, 0.5, size=(num_perturb, num_superpixels))
 

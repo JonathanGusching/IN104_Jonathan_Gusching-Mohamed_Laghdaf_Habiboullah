@@ -1,5 +1,33 @@
-# IN104
-# Part one :
-For the image explainability, we used a dataset of pieces of art : drawings, engravings, iconographies, and paintings. However, the available pre-trained models weren't offering a ready-to-use DL algorithm for that. So we had to code ours (using Internet sources mentioned in the comments at the beginning of cnn.py).
-"WeTransfer" link to the .h5 file of the trained model (40Mo, too big for Github) : https://we.tl/t-KY1pfPw0DJ
-LIME:https://datascienceplus.com/explaining-keras-image-classification-models-with-lime/
+# IN104 Project : XAI
+## Foreword :
+
+Many libraries have been used, maybe you will need to install some of them. We have noticed that on Ubuntu, there are displaying issues when executed directly from the terminal (the ones that need HTML).
+
+## Introduction :
+
+In this Github repository, you will find :
+- The codes used for XAI
+- The codes used for training (cnn.py). You might either use it to train the CNN used in the XAI codes use the .h5 file directly (image_model.h5)
+- A few images used for testing
+
+## Methods :
+
+The methods used for XAI are:
+1. Images :
+	- LIME (LIME_Art.py)
+	- SHAP (SHAP_Art.py)
+	- Grad-CAM (CAM_Art.py)
+2. Tabular Dataset :
+	- XGB
+	- SHAP
+	- LIME
+	- ALE (all of them are in the file Explainable_Tabular.py)
+3. Text Dataset :
+	- Sequence Classification Explainer (provided by the transformers library; the file is SEQ_CLASS_Text.py)
+	- SHAP (SHAP_Text.py)
+
+
+For the image explanability, we used a dataset of pieces of art : drawings, engravings, iconography, and paintings. 
+However, the available pre-trained models weren't offering a ready-to-use DL algorithm for that. So we had to implement our own convolutional neural network thanks to tutorials (cf cnn.py).
+
+

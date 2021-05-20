@@ -13,7 +13,7 @@ PATH="expl/*.jpg"
 
 #TWO TEST IMAGES
 img1="mona_lisa.png"
-img2="saint-michel.jpg"
+#img2="saint-michel.jpg"
 
 
 #default size used by our model
@@ -28,13 +28,13 @@ model = keras.models.load_model("image_model.h5")
 
 #test pictures
 X = skimage.io.imread(img1)
-Z = skimage.io.imread(img2)
+#Z = skimage.io.imread(img2)
 
 #For the model
 X=skimage.transform.resize(X, (img_size,img_size))
-Z=skimage.transform.resize(Z, (img_size,img_size))
+#Z=skimage.transform.resize(Z, (img_size,img_size))
 
-x_test=np.array([X,Z])
+x_test=np.array([X])
 # select a set of background examples to take an expectation over
 
 import glob

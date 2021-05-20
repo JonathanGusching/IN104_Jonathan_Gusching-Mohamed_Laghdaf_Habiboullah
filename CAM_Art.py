@@ -113,7 +113,7 @@ for idx in range(len(model.layers)):
   print(model.get_layer(index = idx).name)
 
 # picking the layer 
-icam = GradCAM(model, i, 'conv2d')
+icam = GradCAM(model, i, 'dropout')
 #icam = GradCAM(model, i, 'conv2d_2') 
 heatmap = icam.compute_heatmap(image)
 heatmap = cv2.resize(heatmap, (164, 164))
