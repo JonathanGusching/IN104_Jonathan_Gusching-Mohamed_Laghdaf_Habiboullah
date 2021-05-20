@@ -30,4 +30,6 @@ The methods used for XAI are:
 For the image explanability, we used a dataset of pieces of art : drawings, engravings, iconography, and paintings. 
 However, the available pre-trained models weren't offering a ready-to-use DL algorithm for that. So we had to implement our own convolutional neural network thanks to tutorials (cf cnn.py).
 
-
+## HOW TO DO:
+Normally, the only thing you need to download is the data sets. You can then theoretically execute the code using the usual Python way.
+If you want to execute cnn.py, you need the dataset in the same folder as cnn.py
