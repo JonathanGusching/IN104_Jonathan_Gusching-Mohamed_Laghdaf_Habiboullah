@@ -58,19 +58,8 @@ shap.summary_plot(shap_values, X_train, plot_type="bar")
 
 
 
-#Applying LIME for explainability
+#Applying LIME for explainability (But we created a new file.py because apparently Lime works better with lightgbm than xgboost)
 
-import lime
-explainer = lime.lime_tabular.LimeTabularExplainer(X_train[features].astype(int).values,  
-mode='classification',training_labels=y_train['target'],feature_names=features)
-
-def prob(data):
-    return np.array(list(zip(1-classifier.predict(data),classifier.predict(data))))
-
-i = 1 #for the row i
-exp = explainer.explain_instance(X_test.loc[i,features], prob, num_features=5)
-
-exp.show_in_notebook(show_all=False)
 
 
 
