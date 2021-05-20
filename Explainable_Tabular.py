@@ -10,7 +10,7 @@ import numpy as np
 #Loading the data
 
 train_df=pd.read_csv('US_Accidents_Dec20_Updated.csv')
-
+train_df=train_df.iloc[:1000,] # For the ALE method because it took a lot of time for executing
 #Choosing features and encoding them
 
 train_df.rename(columns={ 'Temperature(F)': 'Temperature', 'Wind_Chill(F)':'Wind_Chill', 'Distance(mi)':'Distance','Humidity(%)':'Humidity','Pressure(in)':'Pressure','Wind_Speed(mph)':'Wind_Speed', 'Visibility(mi)':'Visibility'},inplace=True)
