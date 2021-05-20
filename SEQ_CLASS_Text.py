@@ -7,7 +7,7 @@ file_name="clothes.csv"
 
 
 ds = pd.read_csv(file_name)
-example=ds.iloc[25,4] #Getting the right column (4), i.e. the one with the review
+example=ds.iloc[15,4] #Getting the right column (4), i.e. the one with the review
 
 
 classifier = transformers.pipeline('sentiment-analysis', return_all_scores=True)
