@@ -9,6 +9,7 @@ In this Github repository, you will find :
 - The codes used for XAI
 - The codes used for training (cnn.py). You might either use it to train the CNN used in the XAI codes use the .h5 file directly (image_model.h5)
 - A few images used for testing
+- Requirements.txt which include which packages to import for running the code.
 
 ## Methods :
 
