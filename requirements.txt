@@ -3,3 +3,14 @@ Python : version 3.8
 Tensorflow: version 2.4.1
 Keras: version 2.4.3
 Tensorflow-estimator: version 2.4.0
+lime
+shap
+shap.maskers
+lightgbm
+numpy
+lime.lime_tabular
+xgboost
+matplotlib
+sklearn
+alepython
+pdpbox
