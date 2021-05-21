@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 import lightgbm as lgb
 import lime
 import lime.lime_tabular
@@ -70,4 +72,4 @@ mode='classification',training_labels=train_df[target],feature_names=model.featu
 i = 1
 exp = explainer.explain_instance(train_df.loc[i,features].astype(int).values, prob, num_features=4)
 
-exp.show_in_notebook()
+exp.show_in_notebook()#We used here jupyter notebook to show it 
